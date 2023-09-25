@@ -1,0 +1,25 @@
+name: shortcut-integration_check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  shortcut_integration:
+    name: shortcut-integration
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "shortcut-integration[bot]"
+          body-includes: Shortcut Story
+      - run: |
+          echo ${{ steps.fc.outputs.comment-author }}
+          if ${{ steps.fc.outputs.comment-author != 'shortcut-integration[bot]' }}; then
+            echo failed - does not have shortcut-integration
+            exit 1
+          fi
