@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"testing"
@@ -45,5 +46,10 @@ func TestLogRequestIDMiddleware(t *testing.T) {
 
 func TestLogErrorContext(t *testing.T) {
 	InitLogger("LOCAL", os.Stdout)
-	LogErrorContext(nil, "hello")
+	LogErrorContext(context.TODO(), "my error message")
+}
+
+func TestLogError(t *testing.T) {
+	InitLogger("LOCAL", os.Stdout)
+	LogError("my error message")
 }

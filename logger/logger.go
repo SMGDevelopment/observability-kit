@@ -89,3 +89,7 @@ func LogRequestIDMiddleware(next http.Handler) http.Handler {
 func LogErrorContext(ctx context.Context, msg string, args ...any) {
 	Logger.ErrorContext(ctx, msg, args...)
 }
+
+func LogError(msg string, args ...any) {
+	Logger.Error(msg, args...)
+}

@@ -1,6 +1,7 @@
 package errs
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -40,6 +41,6 @@ func RecordError(err error) {
 		//Metrics().RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
 		//TODO: properly log error
 		//want to log the entire trace for debugging
-		logger.LogErrorContext(nil, err.Error())
+		logger.LogErrorContext(context.TODO(), err.Error())
 	}
 }
