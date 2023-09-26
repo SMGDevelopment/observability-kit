@@ -73,14 +73,15 @@ func InitLogger(envLevel string, w io.Writer) {
 // LogRequestIDMiddleware middleware for logging using requestID middleware from Chi
 func LogRequestIDMiddleware(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
+		requestIDKey := "requestID"
 		requestID := chimw.GetReqID(r.Context())
 		ctx := r.Context()
-		attr := slog.String("requestID", requestID)
+		attr := slog.String(requestIDKey, requestID)
 		if ctxMap, ok := ctx.Value(ctxLogKey).(ctxLogVal); ok {
-			ctxMap["requestID"] = attr
+			ctxMap[requestIDKey] = attr
 		} else {
 			ctxLogMap := ctxLogVal{}
-			ctxLogMap["requestID"] = attr
+			ctxLogMap[requestIDKey] = attr
 			ctx = context.WithValue(ctx, ctxLogKey, ctxLogMap)
 		}
 		next.ServeHTTP(w, r.WithContext(ctx))
