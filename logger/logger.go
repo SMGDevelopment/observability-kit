@@ -10,8 +10,10 @@ import (
 	chimw "github.com/go-chi/chi/v5/middleware"
 )
 
+type contextKey string
+
+const ctxLogKey contextKey = "logFields"
 const (
-	ctxLogKey  = "logFields"
 	EnvProd    = "PROD"
 	EnvStaging = "STAGING"
 	EnvDev     = "DEV"
