@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"strings"
+
+	"github.com/cheddartv/rmp-observability-kit/metrics"
 )
 
 func WrapError(funcName string, err error, args ...string) error {
@@ -35,8 +37,7 @@ func BaseError(err error) error {
 func RecordError(err error) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
-		//TODO: metrics
-		//Metrics().RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
+		metrics.RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
 		//TODO: properly log error
 		//want to log the entire trace for debugging
 		log.Println(err.Error())
