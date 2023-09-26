@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/cheddartv/rmp-observability-kit/metrics"
 )
 
 var myTestError = errors.New("my test error")
@@ -116,5 +118,6 @@ func TestBaseError(t *testing.T) {
 }
 
 func TestRecordError(t *testing.T) {
+	metrics.InitMetrics("error_testing")
 	RecordError(myTestError)
 }
