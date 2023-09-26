@@ -3,8 +3,9 @@ package errs
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strings"
+
+	"github.com/cheddartv/rmp-observability-kit/logger"
 )
 
 func WrapError(funcName string, err error, args ...string) error {
@@ -39,6 +40,6 @@ func RecordError(err error) {
 		//Metrics().RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
 		//TODO: properly log error
 		//want to log the entire trace for debugging
-		log.Println(err.Error())
+		logger.LogErrorContext(nil, err.Error())
 	}
 }
