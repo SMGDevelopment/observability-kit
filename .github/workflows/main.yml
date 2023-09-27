@@ -1,0 +1,40 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+jobs:
+  Test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go 1.21
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+        id: go
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make test
+          debug: true
+          coverageLocations: |
+            ${{github.workspace}}/rmp-observability-kit/c.out:gocov
+
+      - name: Notify slack
+        if: ${{ failure() }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"${{ secrets.RMP_BOTS }}\", \"attachments\": [ {\"pretext\":\"Tests Failed on ${{ github.ref }}\", \"color\": \"#dc143c\", \"title\": \"${{ github.event.repository.full_name }} - Test Failure\", \"title_link\": \"${{ steps.job-url.outputs.html_url }}\", \"text\": \"Please click link above to investigate\"} ]}'
