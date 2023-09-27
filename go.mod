@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/rabellamy/promstrap v0.0.3
 	github.com/stretchr/testify v1.8.4
+	github.com/go-chi/chi/v5 v5.0.10
 )
 
 require (

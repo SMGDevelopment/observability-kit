@@ -1,11 +1,12 @@
 package errs
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 
+	"github.com/cheddartv/rmp-observability-kit/logger"
 	"github.com/cheddartv/rmp-observability-kit/metrics"
 )
 
@@ -34,12 +35,20 @@ func BaseError(err error) error {
 	}
 }
 
-func RecordError(err error, metrics metrics.Metrics) {
+func RecordErrorContext(context context.Context, err error, logger logger.Logger, metrics metrics.Metrics) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
 		metrics.ErrorInc(BaseError(err).Error())
-		//TODO: properly log error
 		//want to log the entire trace for debugging
-		log.Println(err.Error())
+		logger.ErrorContext(context, err.Error())
+	}
+}
+
+func RecordError(err error, logger logger.Logger, metrics metrics.Metrics) {
+	if err != nil {
+		//getting the base error will ensure uniformity in the error message
+		metrics.ErrorInc(BaseError(err).Error())
+		//want to log the entire trace for debugging
+		logger.Error(err.Error())
 	}
 }
