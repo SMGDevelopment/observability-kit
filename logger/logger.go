@@ -21,7 +21,7 @@ const (
 
 type ctxLogVal map[string]any
 
-var Logger *slog.Logger
+var logger *slog.Logger
 
 // custom Handler implementation
 type sHandler struct {
@@ -67,7 +67,7 @@ func InitLogger(envLevel string, w io.Writer) {
 	}
 
 	handler := sHandler{handler: slog.NewJSONHandler(w, &opts)}
-	Logger = slog.New(&handler)
+	logger = slog.New(&handler)
 }
 
 // LogRequestIDMiddleware middleware for logging using requestID middleware from Chi
@@ -90,9 +90,9 @@ func LogRequestIDMiddleware(next http.Handler) http.Handler {
 }
 
 func LogErrorContext(ctx context.Context, msg string, args ...any) {
-	Logger.ErrorContext(ctx, msg, args...)
+	logger.ErrorContext(ctx, msg, args...)
 }
 
 func LogError(msg string, args ...any) {
-	Logger.Error(msg, args...)
+	logger.Error(msg, args...)
 }
