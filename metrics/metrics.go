@@ -7,11 +7,11 @@ import (
 	"github.com/rabellamy/promstrap/strategy"
 )
 
-var RED strategy.RED
+var red strategy.RED
 
 func InitMetrics(nameSpace string) {
 	//define metrics values
-	red, err := strategy.NewRED(strategy.REDOpts{
+	redTemp, err := strategy.NewRED(strategy.REDOpts{
 		RequestType:    "http",
 		Namespace:      nameSpace,
 		RequestLabels:  []string{"path", "verb"},
@@ -22,11 +22,11 @@ func InitMetrics(nameSpace string) {
 	}
 
 	// register metrics
-	if err := red.Register(); err != nil {
+	if err := redTemp.Register(); err != nil {
 		panic(err)
 	}
 
-	RED = *red
+	red = *redTemp
 }
 
 func REDMetricsMiddleware(next http.Handler) http.Handler {
@@ -36,11 +36,15 @@ func REDMetricsMiddleware(next http.Handler) http.Handler {
 		path := r.URL.Path
 
 		// Records that a request took place
-		RED.Requests.WithLabelValues(path, "GET").Inc()
+		red.Requests.WithLabelValues(path, "GET").Inc()
 
 		next.ServeHTTP(w, r)
 
 		// Records the duration of the request
-		RED.Duration.Histogram.WithLabelValues(path).Observe(time.Since(t).Seconds())
+		red.Duration.Histogram.WithLabelValues(path).Observe(time.Since(t).Seconds())
 	})
+}
+
+func MetricError(errMsg string) {
+	red.Errors.WithLabelValues(errMsg).Inc()
 }

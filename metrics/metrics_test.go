@@ -19,3 +19,7 @@ func TestREDMetricsMiddleware(t *testing.T) {
 	// call the handler using a mock response recorder (we'll not use that anyway)
 	handlerToTest.ServeHTTP(prepHTTPCall())
 }
+
+func TestMetricError(t *testing.T) {
+	MetricError("cool error message")
+}

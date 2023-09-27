@@ -37,7 +37,7 @@ func BaseError(err error) error {
 func RecordError(err error) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
-		metrics.RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
+		metrics.MetricError(BaseError(err).Error())
 		//TODO: properly log error
 		//want to log the entire trace for debugging
 		log.Println(err.Error())
