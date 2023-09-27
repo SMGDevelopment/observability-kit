@@ -34,7 +34,7 @@ func InitLogger(envLevel string, w io.Writer) Logger {
 	case strings.ToLower(EnvStaging): // eventually Dev environment would be level info too
 		opts.Level = slog.LevelInfo
 	case strings.ToLower(EnvProd):
-		opts.Level = slog.LevelError
+		opts.Level = slog.LevelWarn
 	}
 
 	handler := sHandler{handler: slog.NewJSONHandler(w, &opts)}
