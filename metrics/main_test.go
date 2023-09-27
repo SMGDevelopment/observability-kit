@@ -9,6 +9,8 @@ import (
 
 const metricsPrefix = "rmp_observability_kit"
 
+var metrics Metrics
+
 func TestMain(m *testing.M) {
 	setup()
 	exitCode := m.Run()
@@ -16,7 +18,7 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	InitMetrics(metricsPrefix)
+	metrics = InitMetrics(metricsPrefix)
 }
 
 func prepHTTPCall() (*httptest.ResponseRecorder, *http.Request) {

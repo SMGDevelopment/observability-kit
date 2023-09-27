@@ -118,6 +118,6 @@ func TestBaseError(t *testing.T) {
 }
 
 func TestRecordError(t *testing.T) {
-	metrics.InitMetrics("error_testing")
-	RecordError(myTestError)
+	m := metrics.InitMetrics("error_testing")
+	RecordError(myTestError, m)
 }

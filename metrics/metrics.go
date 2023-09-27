@@ -4,9 +4,11 @@ import (
 	"github.com/rabellamy/promstrap/strategy"
 )
 
-var red strategy.RED
+type Metrics struct {
+	red *strategy.RED
+}
 
-func InitMetrics(nameSpace string) {
+func InitMetrics(nameSpace string) Metrics {
 	//define metrics values
 	redTemp, err := strategy.NewRED(strategy.REDOpts{
 		RequestType:    "http",
@@ -23,9 +25,11 @@ func InitMetrics(nameSpace string) {
 		panic(err)
 	}
 
-	red = *redTemp
+	return Metrics{
+		red: redTemp,
+	}
 }
 
-func MetricError(errMsg string) {
-	red.Errors.WithLabelValues(errMsg).Inc()
+func (metrics Metrics) ErrorInc(errMsg string) {
+	metrics.red.Errors.WithLabelValues(errMsg).Inc()
 }

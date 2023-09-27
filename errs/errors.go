@@ -34,10 +34,10 @@ func BaseError(err error) error {
 	}
 }
 
-func RecordError(err error) {
+func RecordError(err error, metrics metrics.Metrics) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
-		metrics.MetricError(BaseError(err).Error())
+		metrics.ErrorInc(BaseError(err).Error())
 		//TODO: properly log error
 		//want to log the entire trace for debugging
 		log.Println(err.Error())
