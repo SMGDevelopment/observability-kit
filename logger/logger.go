@@ -4,10 +4,7 @@ import (
 	"context"
 	"io"
 	"log/slog"
-	"net/http"
 	"strings"
-
-	chimw "github.com/go-chi/chi/v5/middleware"
 )
 
 type contextKey string
@@ -68,31 +65,4 @@ func InitLogger(envLevel string, w io.Writer) {
 
 	handler := sHandler{handler: slog.NewJSONHandler(w, &opts)}
 	logger = slog.New(&handler)
-}
-
-// LogRequestIDMiddleware middleware for logging using requestID middleware from Chi
-func LogRequestIDMiddleware(next http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		requestIDKey := "requestID"
-		requestID := chimw.GetReqID(r.Context())
-		ctx := r.Context()
-		attr := slog.String(requestIDKey, requestID)
-		if ctxMap, ok := ctx.Value(ctxLogKey).(ctxLogVal); ok {
-			ctxMap[requestIDKey] = attr
-		} else {
-			ctxLogMap := ctxLogVal{}
-			ctxLogMap[requestIDKey] = attr
-			ctx = context.WithValue(ctx, ctxLogKey, ctxLogMap)
-		}
-		next.ServeHTTP(w, r.WithContext(ctx))
-	}
-	return chimw.RequestID(http.HandlerFunc(fn))
-}
-
-func LogErrorContext(ctx context.Context, msg string, args ...any) {
-	logger.ErrorContext(ctx, msg, args...)
-}
-
-func LogError(msg string, args ...any) {
-	logger.Error(msg, args...)
 }
