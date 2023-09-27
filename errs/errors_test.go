@@ -1,6 +1,7 @@
 package errs
 
 import (
+	"context"
 	"errors"
 	"os"
 	"testing"
@@ -119,6 +120,7 @@ func TestBaseError(t *testing.T) {
 }
 
 func TestRecordError(t *testing.T) {
-	logger.InitLogger("DEV", os.Stdout)
-	RecordError(myTestError)
+	l := logger.InitLogger("DEV", os.Stdout)
+	RecordErrorContext(context.TODO(), myTestError, l)
+	RecordError(myTestError, l)
 }

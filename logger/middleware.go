@@ -9,6 +9,7 @@ import (
 )
 
 // LogRequestIDMiddleware middleware for logging using requestID middleware from Chi
+// adds the requestID to the context to be processed later by the log functions
 func LogRequestIDMiddleware(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		requestIDKey := "requestID"

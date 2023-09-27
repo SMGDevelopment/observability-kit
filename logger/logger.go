@@ -18,37 +18,11 @@ const (
 
 type ctxLogVal map[string]any
 
-var logger *slog.Logger
-
-// custom Handler implementation
-type sHandler struct {
-	handler slog.Handler
+type Logger struct {
+	log *slog.Logger
 }
 
-func (s *sHandler) Enabled(ctx context.Context, level slog.Level) bool {
-	return s.handler.Enabled(ctx, level)
-}
-
-func (s *sHandler) Handle(ctx context.Context, record slog.Record) error {
-	if ctxMap, ok := ctx.Value(ctxLogKey).(ctxLogVal); ok {
-		for _, v := range ctxMap {
-			if attr, ok := v.(slog.Attr); ok {
-				record.AddAttrs(attr)
-			}
-		}
-	}
-	return s.handler.Handle(ctx, record)
-}
-
-func (s *sHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return s.handler.WithAttrs(attrs)
-}
-
-func (s *sHandler) WithGroup(name string) slog.Handler {
-	return s.handler.WithGroup(name)
-}
-
-func InitLogger(envLevel string, w io.Writer) {
+func InitLogger(envLevel string, w io.Writer) Logger {
 	opts := slog.HandlerOptions{
 		AddSource: true,
 	}
@@ -64,5 +38,45 @@ func InitLogger(envLevel string, w io.Writer) {
 	}
 
 	handler := sHandler{handler: slog.NewJSONHandler(w, &opts)}
-	logger = slog.New(&handler)
+	return Logger{log: slog.New(&handler)}
+}
+
+/********* DEBUG *********/
+
+func (logger Logger) DebugContext(ctx context.Context, msg string, args ...any) {
+	logger.log.DebugContext(ctx, msg, args...)
+}
+
+func (logger Logger) Debug(msg string, args ...any) {
+	logger.log.Debug(msg, args...)
+}
+
+/********* INFO *********/
+
+func (logger Logger) InfoContext(ctx context.Context, msg string, args ...any) {
+	logger.log.InfoContext(ctx, msg, args...)
+}
+
+func (logger Logger) Info(msg string, args ...any) {
+	logger.log.Info(msg, args...)
+}
+
+/********* WARN *********/
+
+func (logger Logger) WarnContext(ctx context.Context, msg string, args ...any) {
+	logger.log.WarnContext(ctx, msg, args...)
+}
+
+func (logger Logger) Warn(msg string, args ...any) {
+	logger.log.Warn(msg, args...)
+}
+
+/********* ERROR *********/
+
+func (logger Logger) ErrorContext(ctx context.Context, msg string, args ...any) {
+	logger.log.ErrorContext(ctx, msg, args...)
+}
+
+func (logger Logger) Error(msg string, args ...any) {
+	logger.log.Error(msg, args...)
 }

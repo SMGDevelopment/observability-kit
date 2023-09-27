@@ -34,13 +34,22 @@ func BaseError(err error) error {
 	}
 }
 
-func RecordError(err error) {
+func RecordErrorContext(context context.Context, err error, logger logger.Logger) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
 		//TODO: metrics
 		//Metrics().RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
-		//TODO: properly log error
 		//want to log the entire trace for debugging
-		logger.LogErrorContext(context.TODO(), err.Error())
+		logger.ErrorContext(context, err.Error())
+	}
+}
+
+func RecordError(err error, logger logger.Logger) {
+	if err != nil {
+		//getting the base error will ensure uniformity in the error message
+		//TODO: metrics
+		//Metrics().RED.Errors.WithLabelValues(BaseError(err).Error()).Inc()
+		//want to log the entire trace for debugging
+		logger.Error(err.Error())
 	}
 }

@@ -44,12 +44,22 @@ func TestLogRequestIDMiddleware(t *testing.T) {
 	handlerToTest.ServeHTTP(prepHTTPCall())
 }
 
-func TestLogErrorContext(t *testing.T) {
-	InitLogger("LOCAL", os.Stdout)
-	LogErrorContext(context.TODO(), "my error message")
+func TestLogDebug(t *testing.T) {
+	logger.DebugContext(context.TODO(), "my error message")
+	logger.Debug("my error message")
+}
+
+func TestLogInfo(t *testing.T) {
+	logger.InfoContext(context.TODO(), "my error message")
+	logger.Info("my error message")
+}
+
+func TestLogWarn(t *testing.T) {
+	logger.WarnContext(context.TODO(), "my error message")
+	logger.Warn("my error message")
 }
 
 func TestLogError(t *testing.T) {
-	InitLogger("LOCAL", os.Stdout)
-	LogError("my error message")
+	logger.ErrorContext(context.TODO(), "my error message")
+	logger.Error("my error message")
 }
