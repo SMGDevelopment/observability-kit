@@ -22,10 +22,7 @@ func setup() {
 }
 
 func prepHTTPCall() (*httptest.ResponseRecorder, *http.Request) {
-
 	w := httptest.NewRecorder()
-
 	r := httptest.NewRequest(http.MethodPost, "/test", nil)
-
 	return w, r
 }
