@@ -1,10 +1,14 @@
 package errs
 
 import (
+	"context"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/cheddartv/rmp-observability-kit/logger"
 )
 
 var myTestError = errors.New("my test error")
@@ -116,5 +120,7 @@ func TestBaseError(t *testing.T) {
 }
 
 func TestRecordError(t *testing.T) {
-	RecordError(myTestError)
+	l := logger.InitLogger("DEV", os.Stdout)
+	RecordErrorContext(context.TODO(), myTestError, l)
+	RecordError(myTestError, l)
 }
