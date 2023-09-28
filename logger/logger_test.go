@@ -2,6 +2,8 @@ package logger
 
 import (
 	"context"
+	"github.com/stretchr/testify/require"
+	"log/slog"
 	"net/http"
 	"os"
 	"testing"
@@ -62,4 +64,29 @@ func TestLogWarn(t *testing.T) {
 func TestLogError(t *testing.T) {
 	logger.ErrorContext(context.TODO(), "my error message")
 	logger.Error("my error message")
+}
+
+func TestAttr(t *testing.T) {
+	attr := Attr("test", "value")
+	unwrappedAttr := unwrapAttr(attr)
+	require.Equal(t, unwrappedAttr.Key, "test")
+	require.Equal(t, unwrappedAttr.Value.String(), "value")
+}
+
+func TestUnwrapAttrs(t *testing.T) {
+	attrOne := Attr("test1", "value1")
+	attrTwo := Attr("test2", "value2")
+
+	attrs := unwrapAttrs(attrOne, attrTwo)
+	require.True(t, len(attrs) == 2)
+
+	attrsOne, ok := attrs[0].(slog.Attr)
+	require.True(t, ok)
+	attrsTwo, ok := attrs[1].(slog.Attr)
+	require.True(t, ok)
+
+	require.Equal(t, attrsOne.Key, attrOne.key)
+	require.Equal(t, attrsOne.Value.String(), attrOne.value)
+	require.Equal(t, attrsTwo.Key, attrTwo.key)
+	require.Equal(t, attrsTwo.Value.String(), attrTwo.value)
 }

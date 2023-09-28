@@ -1,4 +1,4 @@
-# rmp-observability-kit
+# observability-kit
 The idea with this is to create a small library or kit to help with general observability.
 
 ## Logger

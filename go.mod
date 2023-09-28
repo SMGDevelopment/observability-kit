@@ -1,4 +1,4 @@
-module github.com/cheddartv/rmp-observability-kit
+module github.com/cheddartv/observability-kit
 
 go 1.21.1
 

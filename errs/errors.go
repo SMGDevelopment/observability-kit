@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cheddartv/rmp-observability-kit/logger"
-	"github.com/cheddartv/rmp-observability-kit/metrics"
+	"github.com/cheddartv/observability-kit/logger"
+	"github.com/cheddartv/observability-kit/metrics"
 )
 
 func WrapError(funcName string, err error, args ...string) error {
@@ -35,20 +35,21 @@ func BaseError(err error) error {
 	}
 }
 
-func RecordErrorContext(context context.Context, err error, logger logger.Logger, metrics metrics.Metrics) {
+func RecordErrorContext(ctx context.Context, err error, metrics metrics.Metrics, log logger.Logger, logAttrs ...logger.LogAttr) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
 		metrics.ErrorInc(BaseError(err).Error())
 		//want to log the entire trace for debugging
-		logger.ErrorContext(context, err.Error())
+		log.ErrorContext(ctx, err.Error(), logAttrs...)
 	}
 }
 
-func RecordError(err error, logger logger.Logger, metrics metrics.Metrics) {
+func RecordError(err error, metrics metrics.Metrics, log logger.Logger, logAttrs ...logger.LogAttr) {
 	if err != nil {
 		//getting the base error will ensure uniformity in the error message
 		metrics.ErrorInc(BaseError(err).Error())
+
 		//want to log the entire trace for debugging
-		logger.Error(err.Error())
+		log.Error(err.Error(), logAttrs...)
 	}
 }
