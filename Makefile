@@ -1,4 +1,4 @@
-NAME := rmp-observability-kit
+NAME := observability-kit
 TESTS=./...
 
 test:
