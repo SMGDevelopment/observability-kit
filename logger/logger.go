@@ -28,9 +28,7 @@ type LogAttr struct {
 }
 
 func InitLogger(envLevel string, w io.Writer) Logger {
-	opts := slog.HandlerOptions{
-		AddSource: true,
-	}
+	opts := slog.HandlerOptions{}
 
 	// no default required as log level is by default Info
 	switch strings.ToLower(envLevel) {
