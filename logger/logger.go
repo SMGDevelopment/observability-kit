@@ -22,10 +22,13 @@ type Logger struct {
 	log *slog.Logger
 }
 
+type LogAttr struct {
+	key   string
+	value any
+}
+
 func InitLogger(envLevel string, w io.Writer) Logger {
-	opts := slog.HandlerOptions{
-		AddSource: true,
-	}
+	opts := slog.HandlerOptions{}
 
 	// no default required as log level is by default Info
 	switch strings.ToLower(envLevel) {
@@ -41,42 +44,66 @@ func InitLogger(envLevel string, w io.Writer) Logger {
 	return Logger{log: slog.New(&handler)}
 }
 
-/********* DEBUG *********/
-
-func (logger Logger) DebugContext(ctx context.Context, msg string, args ...any) {
-	logger.log.DebugContext(ctx, msg, args...)
+func Attr(key string, value any) LogAttr {
+	return LogAttr{key: key, value: value}
 }
 
-func (logger Logger) Debug(msg string, args ...any) {
-	logger.log.Debug(msg, args...)
+func unwrapAttr(attr LogAttr) slog.Attr {
+	return slog.Any(attr.key, attr.value)
+}
+
+func unwrapAttrs(logAttrs ...LogAttr) []any {
+	attrs := make([]any, 0)
+	for _, v := range logAttrs {
+		attrs = append(attrs, unwrapAttr(v))
+	}
+	return attrs
+}
+
+/********* DEBUG *********/
+
+func (logger Logger) DebugContext(ctx context.Context, msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.DebugContext(ctx, msg, attrs...)
+}
+
+func (logger Logger) Debug(msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.Debug(msg, attrs...)
 }
 
 /********* INFO *********/
 
-func (logger Logger) InfoContext(ctx context.Context, msg string, args ...any) {
-	logger.log.InfoContext(ctx, msg, args...)
+func (logger Logger) InfoContext(ctx context.Context, msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.InfoContext(ctx, msg, attrs...)
 }
 
-func (logger Logger) Info(msg string, args ...any) {
-	logger.log.Info(msg, args...)
+func (logger Logger) Info(msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.Info(msg, attrs...)
 }
 
 /********* WARN *********/
 
-func (logger Logger) WarnContext(ctx context.Context, msg string, args ...any) {
-	logger.log.WarnContext(ctx, msg, args...)
+func (logger Logger) WarnContext(ctx context.Context, msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.WarnContext(ctx, msg, attrs...)
 }
 
-func (logger Logger) Warn(msg string, args ...any) {
-	logger.log.Warn(msg, args...)
+func (logger Logger) Warn(msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.Warn(msg, attrs...)
 }
 
 /********* ERROR *********/
 
-func (logger Logger) ErrorContext(ctx context.Context, msg string, args ...any) {
-	logger.log.ErrorContext(ctx, msg, args...)
+func (logger Logger) ErrorContext(ctx context.Context, msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.ErrorContext(ctx, msg, attrs...)
 }
 
-func (logger Logger) Error(msg string, args ...any) {
-	logger.log.Error(msg, args...)
+func (logger Logger) Error(msg string, args ...LogAttr) {
+	attrs := unwrapAttrs(args...)
+	logger.log.Error(msg, attrs...)
 }
