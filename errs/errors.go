@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cheddartv/observability-kit/logger"
-	"github.com/cheddartv/observability-kit/metrics"
+	"github.com/SMGDevelopment/observability-kit/logger"
+	"github.com/SMGDevelopment/observability-kit/metrics"
 )
 
 func WrapError(funcName string, err error, args ...string) error {

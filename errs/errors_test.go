@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cheddartv/observability-kit/logger"
-	"github.com/cheddartv/observability-kit/metrics"
+	"github.com/SMGDevelopment/observability-kit/logger"
+	"github.com/SMGDevelopment/observability-kit/metrics"
 )
 
 var myTestError = errors.New("my test error")

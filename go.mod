@@ -1,4 +1,4 @@
-module github.com/cheddartv/observability-kit
+module github.com/SMGDevelopment/observability-kit
 
 go 1.21.1
 
